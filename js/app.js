@@ -98,6 +98,26 @@ UI.prototype.mostrarMensaje = (mensaje, tipo) => {
 }
 
 UI.prototype.mostrarResultado = (total, seguro) => {
+
+    const {marca, year, tipo} = seguro;
+    let textoMarca;
+    switch(marca){
+        case '1':
+            textoMarca = 'Americano';
+            break;
+        case '2':
+            textoMarca = 'Asiatico';
+            break;
+        case '3':
+            textoMarca = 'Europeo';
+            break;
+        default:
+            break;
+
+    }
+
+
+
     //Crear el resultado
 
     const div = document.createElement('div');
@@ -105,17 +125,19 @@ UI.prototype.mostrarResultado = (total, seguro) => {
 
     div.innerHTML = `
         <p class="header">Tu Resumen</p>
-        <p class="font-bold">Total: ${total} </p>
+        <p class="font-bold">Marca: <span class="font-normal"> ${textoMarca} </span> </p>
+        <p class="font-bold">Total: <span class="font-normal"> $${total} </span> </p>
     `;
     const resultadoDiv = document.querySelector('#resultado');
-    resultadoDiv.appendChild(div);
+    
 
     //mOSTRAR el spinner
     const spinner = document.querySelector('#cargando');
     spinner.style.display = 'block';
 
     setTimeout(() => {
-        spinner.remove();
+        spinner.style.display = 'none'; //Se borra el spinner pero se muestra el resultado
+        resultadoDiv.appendChild(div); //Se muestra el resultado
     }, 3000)
 }
 
@@ -155,6 +177,11 @@ function cotizarSeguro(e) {
     }
 
     ui.mostrarMensaje('Cotizando', 'correcto');
+    //Ocultar las cotizaciones previas
+    const resultados = document.querySelector('#resultado div');
+    if(resultados != null) {
+        resultados.remove();
+    }
 
     //Instanciar el seguro
     const seguro = new Seguro(marca, year, tipo);
